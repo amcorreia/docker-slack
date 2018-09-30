@@ -14,7 +14,7 @@
 #	--name slack \
 #	amcorreia/docker-slack "$@"
 
-FROM debian:jessie
+FROM debian:stretch
 LABEL maintainer "Alessandro Madruga Correia <mutley.sandro@gmail.com>"
 
 ENV LC_ALL en_US.UTF-8 LANG en_US.UTF-8
@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         apt-transport-https \
         ca-certificates \
         curl \
-        gnupg \
+        gnupg libgtk-3-0 libasound2 libx11-xcb1 \
         locales && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
@@ -34,11 +34,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sSL https://packagecloud.io/slacktechnologies/slack/gpgkey | apt-key add -
 RUN echo "deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main" > /etc/apt/sources.list.d/slacktechnologies_slack.list
 
-RUN apt-get update && apt-get -y install \
-	libasound2 \
-	libx11-xcb1 \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	slack-desktop \
-	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/usr/lib/slack/slack"]
